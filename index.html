@@ -7,12 +7,13 @@
   <meta name="description" content="Yaga Tattoo — Natalya Andiç dövme stüdyosu." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+SC:wght@500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #070608; --ink: #e9dfcb; --muted: #9b9184; --blood: #b3261e; --ember: #ff8a3a;
-      --display: "UnifrakturMaguntia", serif; --head: "Cinzel", serif; --body: "Cormorant Garamond", Georgia, serif;
+      --display: "UnifrakturMaguntia", serif; --head: "Cinzel", "Cormorant SC", serif; --body: "Cormorant Garamond", Georgia, serif;
     }
+    :root[lang="ru"] { --display: "Cormorant SC", "Cormorant Garamond", serif; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { background: var(--bg); }
     body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 20px; overflow-x: hidden; }
@@ -22,6 +23,12 @@
     .nav { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 12px clamp(16px, 4vw, 48px); background: linear-gradient(rgba(0,0,0,.55), transparent); }
     .nav .logo { display: block; line-height: 0; }
     .nav .logo img { height: 72px; width: auto; filter: brightness(1.25) contrast(1.1) drop-shadow(0 4px 12px rgba(0,0,0,.7)); }
+    .navr { display: flex; align-items: center; gap: clamp(14px, 3vw, 36px); }
+    .lang { display: flex; gap: 2px; font-family: var(--head); font-size: 12px; letter-spacing: .15em; }
+    .lang button { background: none; border: 0; color: var(--ink); font: inherit; letter-spacing: inherit; padding: 6px 7px; cursor: pointer; opacity: .55; border-bottom: 1px solid transparent; transition: opacity .2s, border-color .2s; }
+    .lang button:hover { opacity: 1; }
+    .lang button[aria-pressed="true"] { opacity: 1; border-bottom-color: var(--ember); }
+    .lang button:focus-visible { outline: 1px solid var(--ember); outline-offset: 2px; }
     .nav nav { display: flex; gap: clamp(14px, 3vw, 36px); font-family: var(--head); font-size: 13px; letter-spacing: .25em; }
     .nav nav a { text-decoration: none; opacity: .85; }
     .nav nav a:hover { opacity: 1; }
@@ -115,7 +122,7 @@
     .tcontrols { margin-top: 24px; padding: 18px; border: 1px solid #251f22; display: grid; gap: 14px; transition: opacity .3s; }
     .tcontrols.off { opacity: .45; pointer-events: none; }
     .zone-label { font-family: var(--head); letter-spacing: .12em; font-size: 14px; color: var(--ember); }
-    .tcontrols label { display: grid; grid-template-columns: 80px 1fr; align-items: center; font-size: 17px; color: var(--muted); }
+    .tcontrols label { display: grid; grid-template-columns: 100px 1fr; align-items: center; font-size: 17px; color: var(--muted); }
     .tcontrols input[type=range] { accent-color: #b3261e; width: 100%; }
     .tbtns { display: flex; gap: 8px; flex-wrap: wrap; }
     .tactions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
@@ -133,7 +140,10 @@
 <body>
   <header class="nav">
     <a class="logo" href="#" aria-label="Yaga Tattoo"><img src="assets/logo-mark.png" alt="Yaga Tattoo" /></a>
-    <nav><a href="#eserler">ESERLER</a><a href="#tasarim">TASARIM</a><a href="#randevu">RANDEVU</a></nav>
+    <div class="navr">
+      <nav><a href="#eserler" data-i18n="nav.works">ESERLER</a><a href="#tasarim" data-i18n="nav.design">TASARIM</a><a href="#randevu" data-i18n="nav.book">RANDEVU</a></nav>
+      <div class="lang" role="group" data-i18n-aria="nav.lang" aria-label="Dil"><button type="button" data-lang="tr" aria-pressed="true">TR</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="ru" aria-pressed="false">RU</button></div>
+    </div>
   </header>
 
   <section id="journey">
@@ -144,29 +154,29 @@
 
       <div class="beat" data-in="0" data-out="0.07" style="opacity:1">
         <img class="hero-logo" src="assets/logo-text.png" alt="Yaga Tattoo" />
-        <div class="kicker">NATALYA ANDİÇ</div>
+        <div class="kicker" data-i18n="hero.artist">NATALYA ANDİÇ</div>
       </div>
       <div class="beat left" data-in="0.10" data-out="0.21">
-        <h2>Bulutların üstünde, gece yarısı.</h2>
-        <p>Her dövme bir yolculukla başlar.</p>
+        <h2 data-i18n="hero.b1.h">Bulutların üstünde, gece yarısı.</h2>
+        <p data-i18n="hero.b1.p">Her dövme bir yolculukla başlar.</p>
       </div>
       <div class="beat" data-in="0.24" data-out="0.33">
-        <h2>Kapı yalnızca cesur olanlara açılır.</h2>
+        <h2 data-i18n="hero.b2.h">Kapı yalnızca cesur olanlara açılır.</h2>
       </div>
       <div class="beat right" data-in="0.37" data-out="0.49">
-        <h2>Karga yolu gösterir.</h2>
+        <h2 data-i18n="hero.b3.h">Karga yolu gösterir.</h2>
       </div>
       <div class="beat left" data-in="0.55" data-out="0.68">
-        <h2>Her duvarda bir hikâye.</h2>
-        <p>Her çizgide bir iz.</p>
+        <h2 data-i18n="hero.b4.h">Her duvarda bir hikâye.</h2>
+        <p data-i18n="hero.b4.p">Her çizgide bir iz.</p>
       </div>
       <div class="beat left final" data-in="0.88" data-out="1">
-        <div class="kicker artist">NATALYA ANDİÇ</div>
-        <h2>Mürekkep. Deri. Sabır.</h2>
-        <a class="btn" href="#randevu">RANDEVU AL</a>
+        <div class="kicker artist" data-i18n="hero.artist">NATALYA ANDİÇ</div>
+        <h2 data-i18n="hero.final">Mürekkep. Deri. Sabır.</h2>
+        <a class="btn" href="#randevu" data-i18n="hero.cta">RANDEVU AL</a>
       </div>
 
-      <div id="hint">KAYDIR VE İÇERİ GİR</div>
+      <div id="hint" data-i18n="hero.hint">KAYDIR VE İÇERİ GİR</div>
       <div id="smoke"><div class="smoke-layer"></div><div class="smoke-layer"></div></div>
     </div>
   </section>
@@ -175,66 +185,67 @@
     <div class="smoke-layer top" data-speed="0.15"></div>
     <div class="smoke-layer mid" data-speed="-0.1"></div>
     <div class="section-head">
-      <div class="kicker">KARANLIKTAN DOĞANLAR</div>
-      <h2>Eserler</h2>
-      <p>Blackwork, fine line ve geleneksel çizgiler.</p>
+      <div class="kicker" data-i18n="works.kicker">KARANLIKTAN DOĞANLAR</div>
+      <h2 data-i18n="works.title">Eserler</h2>
+      <p data-i18n="works.sub">Blackwork, fine line ve geleneksel çizgiler.</p>
     </div>
     <div id="gallery-lens"></div>
-    <p class="note">Örnek çizimler yer tutucudur — stüdyonun gerçek çalışmalarıyla değiştirilecek.</p>
+    <p class="note" data-i18n="works.note">Örnek çizimler yer tutucudur — stüdyonun gerçek çalışmalarıyla değiştirilecek.</p>
   </section>
 
   <section class="contact" id="randevu">
     <div class="reveal">
-      <h2>Hikâyeni birlikte çizelim.</h2>
-      <p>Natalya Andiç ile randevu ve fiyat bilgisi için yaz.</p>
-      <a class="btn" href="#">INSTAGRAM'DAN YAZ</a>
+      <h2 data-i18n="contact.h">Hikâyeni birlikte çizelim.</h2>
+      <p data-i18n="contact.p">Natalya Andiç ile randevu ve fiyat bilgisi için yaz.</p>
+      <a class="btn" href="#" data-i18n="contact.btn">INSTAGRAM'DAN YAZ</a>
     </div>
   </section>
 
   <section class="designer" id="tasarim">
     <div class="section-head">
-      <div class="kicker">DENE · YERLEŞTİR · KARAR VER</div>
-      <h2>Tattoo Tasarım</h2>
-      <p>Bir dövme seç, vücuda sürükle; köşelerden büyüt, üstteki tutamaçla döndür.</p>
+      <div class="kicker" data-i18n="d.kicker">DENE · YERLEŞTİR · KARAR VER</div>
+      <h2 data-i18n="d.title">Tattoo Tasarım</h2>
+      <p data-i18n="d.sub">Bir dövme seç, vücuda sürükle; köşelerden büyüt, üstteki tutamaçla döndür.</p>
     </div>
     <div class="designer-grid">
       <div class="dleft">
         <div class="toggles">
-          <div class="tgroup" role="group" aria-label="Model">
-            <button class="tog" data-gender="f" aria-pressed="true">KADIN</button>
-            <button class="tog" data-gender="m" aria-pressed="false">ERKEK</button>
+          <div class="tgroup" role="group" data-i18n-aria="d.model" aria-label="Model">
+            <button class="tog" data-gender="f" data-i18n="d.f" aria-pressed="true">KADIN</button>
+            <button class="tog" data-gender="m" data-i18n="d.m" aria-pressed="false">ERKEK</button>
           </div>
-          <div class="tgroup" role="group" aria-label="Yön">
-            <button class="tog" data-view="front" aria-pressed="true">ÖNDEN</button>
-            <button class="tog" data-view="back" aria-pressed="false">ARKADAN</button>
-            <button class="tog" data-view="right" aria-pressed="false">SAĞDAN</button>
-            <button class="tog" data-view="left" aria-pressed="false">SOLDAN</button>
+          <div class="tgroup" role="group" data-i18n-aria="d.view" aria-label="Yön">
+            <button class="tog" data-view="front" data-i18n="d.front" aria-pressed="true">ÖNDEN</button>
+            <button class="tog" data-view="back" data-i18n="d.back" aria-pressed="false">ARKADAN</button>
+            <button class="tog" data-view="right" data-i18n="d.right" aria-pressed="false">SAĞDAN</button>
+            <button class="tog" data-view="left" data-i18n="d.left" aria-pressed="false">SOLDAN</button>
           </div>
         </div>
         <div class="tstage" id="tstage">
           <div class="figure-wrap" id="figure-wrap">
-            <div class="figure" id="figure"><img id="body-img" alt="" hidden /><canvas id="figcanvas" role="img" aria-label="Dövme deneme modeli"></canvas></div>
+            <div class="figure" id="figure"><img id="body-img" alt="" hidden /><canvas id="figcanvas" role="img" data-i18n-aria="d.canvas" aria-label="Dövme deneme modeli"></canvas></div>
             <div class="overlay" id="overlay"></div>
           </div>
-          <div class="zoomctl"><button class="tog" id="zoom-out" aria-label="Uzaklaştır">−</button><span id="zoom-val">100%</span><button class="tog" id="zoom-in" aria-label="Yakınlaştır">+</button><button class="tog" id="zoom-fit">SIĞDIR</button></div>
+          <div class="zoomctl"><button class="tog" id="zoom-out" data-i18n-aria="d.zoomout" aria-label="Uzaklaştır">−</button><span id="zoom-val">100%</span><button class="tog" id="zoom-in" data-i18n-aria="d.zoomin" aria-label="Yakınlaştır">+</button><button class="tog" id="zoom-fit" data-i18n="d.fit">SIĞDIR</button></div>
         </div>
       </div>
       <div class="dright">
-        <h3>Dövme seç</h3>
+        <h3 data-i18n="d.pick">Dövme seç</h3>
         <div class="tpicker" id="tpicker"></div>
         <div class="tcontrols off" id="tcontrols">
           <div class="zone-label" id="zone-label"></div>
-          <label>Boyut <input type="range" id="size" min="3" max="140" value="20" /></label>
-          <label>Döndür <input type="range" id="rot" min="-180" max="180" value="0" /></label>
-          <div class="tbtns"><button class="tog" id="t-del">SEÇİLİ DÖVMEYİ SİL</button></div>
+          <label><span data-i18n="d.size">Boyut</span> <input type="range" id="size" min="3" max="140" value="20" /></label>
+          <label><span data-i18n="d.rot">Döndür</span> <input type="range" id="rot" min="-180" max="180" value="0" /></label>
+          <div class="tbtns"><button class="tog" id="t-del" data-i18n="d.del">SEÇİLİ DÖVMEYİ SİL</button></div>
         </div>
-        <div class="tactions"><button class="tog" id="t-clear">TÜMÜNÜ TEMİZLE</button><button class="tog" id="t-save">PNG İNDİR</button></div>
-        <p class="note dnote">Dövme seçtiğin bölgenin açısına ve kıvrımına göre otomatik oturur. Görseller örnektir; Natalya Andiç tasarımı sana özel çizer.</p>
+        <div class="tactions"><button class="tog" id="t-clear" data-i18n="d.clear">TÜMÜNÜ TEMİZLE</button><button class="tog" id="t-save" data-i18n="d.save">PNG İNDİR</button></div>
+        <p class="note dnote" data-i18n="d.note">Dövme seçtiğin bölgenin açısına ve kıvrımına göre otomatik oturur. Görseller örnektir; Natalya Andiç tasarımı sana özel çizer.</p>
       </div>
     </div>
   </section>
-  <footer>YAGA TATTOO · NATALYA ANDİÇ · ADRES · TELEFON</footer>
+  <footer data-i18n="footer">YAGA TATTOO · NATALYA ANDİÇ · ADRES · TELEFON</footer>
 
+  <script type="module" src="js/i18n.js"></script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/designer.js"></script>
 </body>

@@ -2,6 +2,7 @@
 // Kartlar tek bir WebGL tuvalinde çizilir; merkez düz, kenarlar eğri ve renk kaymalı.
 // Sürükle, fırlat, ok tuşları veya butonlar; yaylanarak durur ve döngü yapar.
 import { svgMarkup } from "./tattoos.js";
+import { t as tr, tName, tStyle, onLang } from "./i18n.js";
 
 // ---------- hareket yardımcıları ----------
 const wrap = (i, n) => (n > 0 ? ((i % n) + n) % n : 0);
@@ -124,7 +125,7 @@ const CSS = `
  * @param {{name:string, style:string, svg:string}[]} tattoos
  * @param {{bend?:number,label?:string,hint?:string}} opts
  */
-export function mountLens(host, tattoos, { bend = 0.55, label = "Yaga Tattoo", hint = "Sürükle" } = {}) {
+export function mountLens(host, tattoos, { bend = 0.55 } = {}) {
   const n = tattoos.length;
   if (!n) return;
   if (!document.getElementById("clc-style")) {
@@ -132,18 +133,18 @@ export function mountLens(host, tattoos, { bend = 0.55, label = "Yaga Tattoo", h
     st.id = "clc-style"; st.textContent = CSS; document.head.appendChild(st);
   }
   host.innerHTML = `
-    <div class="clc-root" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Eserler">
+    <div class="clc-root" tabindex="0" role="region" aria-roledescription="carousel" aria-label="">
       <div class="clc-glow" aria-hidden="true"></div>
       <canvas class="clc-canvas" aria-hidden="true"></canvas>
       <div class="clc-grain" aria-hidden="true"></div>
-      <div class="clc-top"><b style="font-weight:600">${label}</b><span>${hint}</span></div>
+      <div class="clc-top"><b style="font-weight:600"></b><span></span></div>
       <div class="clc-copy" aria-live="polite"></div>
       <div class="clc-ctl">
         <span class="clc-count"></span>
         <span class="clc-bar" aria-hidden="true"><span></span></span>
         <div class="clc-btns">
-          <button type="button" class="clc-btn" data-d="-1" aria-label="Önceki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-          <button type="button" class="clc-btn" data-d="1" aria-label="Sonraki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+          <button type="button" class="clc-btn" data-d="-1" aria-label=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button type="button" class="clc-btn" data-d="1" aria-label=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </div>
     </div>`;
@@ -153,11 +154,23 @@ export function mountLens(host, tattoos, { bend = 0.55, label = "Yaga Tattoo", h
   const count = host.querySelector(".clc-count");
   const barFill = host.querySelector(".clc-bar > span");
 
+  // ---- sabit etiketler (dile göre) ----
+  function labels() {
+    root.setAttribute("aria-label", tr("works.aria"));
+    root.querySelector(".clc-top b").textContent = tr("works.label");
+    root.querySelector(".clc-top span").textContent = tr("works.drag");
+    root.querySelector('[data-d="-1"]').setAttribute("aria-label", tr("works.prev"));
+    root.querySelector('[data-d="1"]').setAttribute("aria-label", tr("works.next"));
+  }
+  labels();
+
   // ---- metin bloğu ----
-  let shown = false, copyRaf = 0;
+  let shown = false, copyRaf = 0, shownIdx = 0;
+  onLang(() => { labels(); setCopy(shownIdx); });
   function setCopy(i) {
+    shownIdx = i;
     const t = tattoos[i];
-    const words = t.name.split(" ");
+    const words = tName(t).split(" ");
     let off = 0;
     const chars = words.map((w) => {
       const html = `<span style="display:inline-block;white-space:nowrap">${[...w].map((c, k) =>
@@ -166,7 +179,7 @@ export function mountLens(host, tattoos, { bend = 0.55, label = "Yaga Tattoo", h
       return html;
     }).join(" ");
     copy.className = "clc-copy";
-    copy.innerHTML = `<span class="clc-kicker">${t.style}</span><h3 class="clc-title"><span class="clc-line">${chars}</span></h3>`;
+    copy.innerHTML = `<span class="clc-kicker">${tStyle(t)}</span><h3 class="clc-title"><span class="clc-line">${chars}</span></h3>`;
     count.innerHTML = `${pad2(i + 1)} <i>/ ${pad2(n)}</i>`;
     barFill.style.transform = `scaleX(${(i + 1) / n})`;
     cancelAnimationFrame(copyRaf);

@@ -1,5 +1,6 @@
 // Tattoo Tasarım: dövmeyi vücut üzerinde dene.
 import { TATTOOS, svgDataUrl, svgMarkup } from "./tattoos.js";
+import { t, tz, tName, onLang } from "./i18n.js";
 
 // Vücut bölgeleri: x,y = görsel içindeki konum (%), size = görsel genişliğine oranla varsayılan boyut (%),
 // rot = uzvun açısı (derece), wrap = kıvrımlı yüzeyde yatay daralma (kol/bacak silindir gibi sarar).
@@ -100,7 +101,7 @@ function render() {
     const box = document.createElement("div");
     box.className = "tbox" + (d.id === selected ? " sel" : "");
     place(box, d, d.wrap);
-    box.innerHTML = d.id === selected ? `<i class="h nw"></i><i class="h ne"></i><i class="h sw"></i><i class="h se"></i><i class="h rot"></i><span class="tip">${d.zone || "Serbest"}</span>` : "";
+    box.innerHTML = d.id === selected ? `<i class="h nw"></i><i class="h ne"></i><i class="h sw"></i><i class="h se"></i><i class="h rot"></i><span class="tip">${tz(d.zone)}</span>` : "";
     box.addEventListener("pointerdown", (e) => startGesture(e, d, e.target.classList.contains("rot") ? "rotate" : e.target.classList.contains("h") ? "resize" : "move"));
     overlay.appendChild(box); d.box = box;
   }
@@ -113,14 +114,14 @@ function place(el, d, w) {
 }
 function update(d) {
   place(d.box, d, d.wrap); paint();
-  const tip = d.box.querySelector(".tip"); if (tip) tip.textContent = d.zone || "Serbest";
+  const tip = d.box.querySelector(".tip"); if (tip) tip.textContent = tz(d.zone);
   syncControls();
 }
 function syncControls() {
   const d = list().find((x) => x.id === selected);
   document.getElementById("tcontrols").classList.toggle("off", !d);
-  if (!d) { zoneLabel.textContent = "Bir dövme seç ve vücuda yerleştir"; return; }
-  zoneLabel.textContent = d.zone ? `${d.zone} · vücuda uyarlandı` : "Serbest yerleşim";
+  if (!d) { zoneLabel.textContent = t("d.empty"); return; }
+  zoneLabel.textContent = d.zone ? `${tz(d.zone)} · ${t("d.fitted")}` : t("d.free");
   sizeIn.value = Math.round(d.size * 100); rotIn.value = Math.round(d.rot);
 }
 
@@ -191,12 +192,12 @@ $("#t-clear").addEventListener("click", () => { store[key()] = []; selected = nu
 $("#t-save").addEventListener("click", () => {
   try {
     cv.toBlob((blob) => {
-      if (!blob) return alert("Görsel oluşturulamadı.");
+      if (!blob) return alert(t("d.errImg"));
       const a = document.createElement("a"); a.download = `yaga-tattoo-tasarim-${key()}.png`;
       a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     }, "image/png");
-  } catch (e) { alert("Bu tarayıcı görseli indirmeye izin vermedi. Chrome ile deneyebilirsin."); }
+  } catch (e) { alert(t("d.errDl")); }
 });
 window.addEventListener("keydown", (e) => {
   if ((e.key === "Delete" || e.key === "Backspace") && selected && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) {
@@ -207,7 +208,10 @@ window.addEventListener("resize", () => list().forEach((d) => d.box && update(d)
 
 // ---------- dövme listesi (tıkla ya da sürükleyip bırak) ----------
 const picker = $("#tpicker");
-picker.innerHTML = TATTOOS.map((t, i) => `<button class="tthumb" data-t="${i}" title="${t.name}">${svgMarkup(t, "#e9dfcb", "#141116")}<span>${t.name}</span></button>`).join("");
+const paintPicker = () => picker.querySelectorAll(".tthumb").forEach((b, i) => { b.title = tName(TATTOOS[i]); b.querySelector("span").textContent = tName(TATTOOS[i]); });
+picker.innerHTML = TATTOOS.map((tt, i) => `<button class="tthumb" data-t="${i}">${svgMarkup(tt, "#e9dfcb", "#141116")}<span></span></button>`).join("");
+paintPicker();
+onLang(() => { paintPicker(); render(); });
 picker.querySelectorAll(".tthumb").forEach((btn) => btn.addEventListener("pointerdown", (e) => {
   e.preventDefault();
   const t = +btn.dataset.t, sx = e.clientX, sy = e.clientY;
@@ -233,7 +237,7 @@ picker.querySelectorAll(".tthumb").forEach((btn) => btn.addEventListener("pointe
 function drawZones() {
   overlay.querySelectorAll(".zdot").forEach((n) => n.remove());
   for (const z of ZONES[key()]) {
-    const n = document.createElement("div"); n.className = "zdot"; n.style.left = z.x * 100 + "%"; n.style.top = z.y * 100 + "%"; n.textContent = z.name; overlay.appendChild(n);
+    const n = document.createElement("div"); n.className = "zdot"; n.style.left = z.x * 100 + "%"; n.style.top = z.y * 100 + "%"; n.textContent = tz(z.name); overlay.appendChild(n);
   }
 }
 if (params.get("view")) { const [g, v] = params.get("view").split("-"); gender = g; view = v; }
