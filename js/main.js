@@ -1,4 +1,5 @@
-import { TATTOOS, svgMarkup } from "./tattoos.js";
+import { TATTOOS } from "./tattoos.js";
+import { mountLens } from "./gallery-lens.js";
 
 // ---------- ayarlar ----------
 const FRAME_COUNT = 277;            // 1–73 bulutlar/şato · 74–145 kapı/koridor · 146–277 salon/dövme odası
@@ -102,12 +103,7 @@ function tick() {
 tick();
 
 // ---------- galeri ----------
-const grid = document.getElementById("gallery-grid");
-grid.innerHTML = TATTOOS.map((t) => `
-  <figure class="card">
-    <div class="art">${svgMarkup(t, "#e9dfcb", "#0f0d10")}</div>
-    <figcaption><span>${t.name}</span><em>${t.style}</em></figcaption>
-  </figure>`).join("");
+mountLens(document.getElementById("gallery-lens"), TATTOOS);
 
 // kara bulut dokusu (canvas'ta üretilir)
 function cloudCanvas(size, seed, color) {
